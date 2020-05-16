@@ -113,6 +113,14 @@ class Database():
         return car_id
 
 
+    def return_user_id(self, username):
+        query = f'select id from usuarios where login = "{username}"'
+
+        user_id = self.commit_with_return(query)[0][0]
+
+        return user_id
+
+
     def return_salt(self, username):
         query = f'select salt from usuarios where login = "{username}"'
 
