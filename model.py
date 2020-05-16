@@ -30,9 +30,25 @@ class Backend():
         return salt
 
 
+    def compare_password(self, username, password):
+        passw = self.database.return_password(username, password)
+
+        if passw == password:
+            return True
+        else:
+            return False
+
+
+    def crypto(self, password, salt):
+        password = hashlib.md5(str(password + salt).encode())
+        password = password.hexdigest()
+
+        return password
+
+
     def novo_usuario(self, data):
         try:
-            login = data['Login']
+            login = data['Username']
             password = data['Password']
             first_name = data['FirstName']
             second_name = data['SecondName']
@@ -40,9 +56,7 @@ class Backend():
 
             salt = self.gera_salt()
 
-            password = hashlib.md5(str(password + salt).encode())
-            password = password.hexdigest()
-
+            password = self.crypto(password, salt)
 
             columns = self.database.return_columns('usuarios')
             columns.pop('id')
@@ -238,4 +252,38 @@ class Backend():
                 'status' : 400
             }
         
+        return self.r
+
+
+    def autenticar_usuario(self, data):
+        try:
+            username = data['Username']
+            password = data['Password']
+
+            
+            salt = self.database.return_salt(username)
+
+            password = self.crypto(password, salt)
+
+            response = self.compare_password(username, password)
+
+            if response:
+                self.r = {
+                    'message' : 'OK',
+                    'status'  : 200
+                }
+            else:
+                self.r = {
+                    'message' : {
+                        'error' : 'incorrect username or password'
+                    },
+                    'status'  : 404
+                }
+        except Exception as e:
+            self.r = {
+                    'message' : {
+                        'error' : str(e)
+                    },
+                    'status'  : 404
+                }
         return self.r

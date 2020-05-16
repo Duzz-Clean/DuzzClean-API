@@ -79,6 +79,7 @@ class Database():
 
     def commit_with_return(self, query):
         results = None
+        print(query)
         self.connect()
         try:
             self.cursor.execute(query)
@@ -103,9 +104,26 @@ class Database():
 
         return dict_columns
 
+
     def return_car_id(self, license_plate):
         query = self.gerador_de_query.search_car_id(license_plate)
 
         car_id = self.commit_with_return(query)[0][0]
 
         return car_id
+
+
+    def return_salt(self, username):
+        query = f'select salt from usuarios where login = "{username}"'
+
+        salt = self.commit_with_return(query)[0][0]
+
+        return salt
+
+
+    def return_password(self, username, password):
+        query = f'select password from usuarios where login = "{username}" and password = "{password}"'
+
+        password = self.commit_with_return(query)[0][0]
+
+        return password
