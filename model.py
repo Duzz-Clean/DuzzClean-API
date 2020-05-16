@@ -287,3 +287,23 @@ class Backend():
                     'status'  : 404
                 }
         return self.r
+
+
+    def buscar_notificacoes(self, data):
+        try:
+            user_id = data['UserId']
+
+            notifications = self.database.return_notifications(user_id)
+
+            self.r = {
+                'message' : notifications,
+                'status'  : 200
+            }
+        except Exception as e:
+            self.r = {
+                    'message' : {
+                        'error' : str(e)
+                    },
+                    'status'  : 404
+                }
+        return self.r
