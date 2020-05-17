@@ -41,7 +41,7 @@ create table carros_satisfacoes
 (
     `id` INT(12) PRIMARY KEY AUTO_INCREMENT,
     `carro` INT(12) NOT NULL, -- Chave estrangeira de carros ID
-    `satisfaction` INT NOT NULL,
+    `satisfacao` INT NOT NULL,
     `comentario` TEXT
 )ENGINE = InnoDB;
 --
@@ -49,30 +49,7 @@ create table limpezas
 (   
     `id` INT(12) PRIMARY KEY AUTO_INCREMENT,
     `carro` INT(12) NOT NULL, -- Chave estrangeira de carros ID
-    `date` DATE NOT NULL,
-    `km` VARCHAR(11) NOT NULL,
-    `nascimento` INT(12) NOT NULL, -- Chave estrangeira de nascimentos ID
-    `tipo` VARCHAR(8) NOT NULL
-)ENGINE = InnoDB;
---
-create table nascimentos
-(
-    `id` INT(12) PRIMARY KEY AUTO_INCREMENT,
-    `nome` VARCHAR(12) NOT NULL
-)ENGINE = InnoDB;
---
-create table manutencoes
-(
-    `id` INT(12) PRIMARY KEY AUTO_INCREMENT,
-    `tipo` INT(12) NOT NULL, -- Chave estrangeira de manutencoes_tipos ID
-    `date` DATE NOT NULL,
-    `date_future` DATE NOT NULL
-)ENGINE = InnoDB;
---
-create table manutencoes_tipos
-(
-    `id` INT(12) PRIMARY KEY AUTO_INCREMENT,
-    `nome` VARCHAR(12) NOT NULL
+    `data` DATE NOT NULL
 )ENGINE = InnoDB;
 --
 create table notificacoes 
@@ -101,17 +78,20 @@ create table notificacoes_recusadas
 (
     `id` INT(12) PRIMARY KEY AUTO_INCREMENT,
     `notificacao` INT(12) NOT NULL, -- Chave estrangeira de notificacoes ID
+    `tipo` INT(12) NOT NULL, -- Chave estrangeira de notificacoes_tipos ID
     `carro` INT(12) NOT NULL, -- Chave estrangeira de carros ID
-    `date` DATE NOT NULL,
-    `km` VARCHAR(11)
+    `data` DATE NOT NULL
 )ENGINE = InnoDB;
+
+INSERT INTO `tipos_usuarios` (`id`, `descricao`) VALUES (NULL, 'Usuário'), (NULL, 'Motorista'), (NULL, 'DuzzClean');
+INSERT INTO `notificacoes_tipos` (`id`, `descricao`) VALUES (NULL, 'Solicitação de Limpeza');
+
 --
 ALTER TABLE carros_satisfacoes
 ADD CONSTRAINT fk_carro FOREIGN KEY (carro) REFERENCES carros(id);
 --
 ALTER TABLE limpezas 
-ADD CONSTRAINT fk_carro2 FOREIGN KEY (carro) REFERENCES carros(id), 
-ADD CONSTRAINT fk_nascimento FOREIGN KEY (nascimento) REFERENCES nascimentos(id);
+ADD CONSTRAINT fk_carro2 FOREIGN KEY (carro) REFERENCES carros(id);
 --
 ALTER TABLE notificacoes_recusadas 
 ADD CONSTRAINT fk_carro3 FOREIGN KEY (carro) REFERENCES carros(id);
@@ -122,9 +102,6 @@ ADD CONSTRAINT fk_tipos_usuarios FOREIGN KEY (type) REFERENCES tipos_usuarios(id
 ALTER TABLE carros
 ADD CONSTRAINT fk_usuarios FOREIGN KEY (usuario) REFERENCES usuarios(id);
 --
-ALTER TABLE manutencoes
-ADD CONSTRAINT fk_manutencoes_tipos FOREIGN KEY (tipo) REFERENCES manutencoes_tipos(id);
---
 ALTER TABLE notificacoes
 ADD CONSTRAINT fk_carro4 FOREIGN KEY (carro) REFERENCES carros(id),
 ADD CONSTRAINT fk_notificacoes_tipos FOREIGN KEY (tipo) REFERENCES notificacoes_tipos(id),
@@ -132,4 +109,5 @@ ADD CONSTRAINT fk_usuarios2 FOREIGN KEY (usuario) REFERENCES usuarios(id);
 --
 ALTER TABLE notificacoes_recusadas
 ADD CONSTRAINT fk_notificacoes FOREIGN KEY (notificacao) REFERENCES notificacoes(id),
+ADD CONSTRAINT fk_notificacoes_tipos2 FOREIGN KEY (tipo) REFERENCES notificacoes_tipos(id),
 ADD CONSTRAINT fk_carro5 FOREIGN KEY (carro) REFERENCES carros(id);

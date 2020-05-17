@@ -11,7 +11,7 @@ class Gera_query(object):
 
     def search_car_id(self, license_plate):
         self.query = 'select id from carros where placa = '
-        self.query += f'{str(license_plate)}'
+        self.query += f'"{str(license_plate)}"'
 
         return self.query
 

@@ -309,3 +309,110 @@ class Backend():
                     'status'  : 404
                 }
         return self.r
+
+    
+    def buscar_limpezas_veiculo(self, data):
+        try:
+            license_plate = data['LicensePlate']
+
+            car_id = self.database.return_car_id(license_plate)
+
+            query = f'select * from limpezas where carro = {car_id}'
+            response = self.database.commit_with_return(query)
+
+            limpezas = {
+                
+            }
+
+            for limpeza in response:
+                limpezas[f'Limpeza{limpeza[0]}'] = {
+                    'ID' : limpeza[0],
+                    'CarId' : limpeza[1],
+                    'LicensePlate' : license_plate,
+                    'DateTime' : limpeza[2]
+                }
+
+            self.r = {
+                'message' : limpezas,
+                'status'  : 200
+            }
+        except Exception as e:
+            self.r = {
+                    'message' : {
+                        'error' : str(e)
+                    },
+                    'status'  : 404
+                }
+        return self.r
+    
+    def buscar_resumo_veiculo(self, data):
+        try:
+            license_plate = data['LicensePlate']
+
+            car_id = self.database.return_car_id(license_plate)
+
+
+            informacoes = self.database.return_resume_of_vehicle(car_id)
+
+            self.r = {
+                'message' : informacoes,
+                'status'  : 200
+            }
+        except Exception as e:
+            self.r = {
+                    'message' : {
+                        'error' : str(e)
+                    },
+                    'status'  : 404
+                }
+        return self.r
+
+
+    def buscar_ultima_limpeza_veiculo(self, data):
+        try:
+            license_plate = data['LicensePlate']
+
+            car_id = self.database.return_car_id(license_plate)
+
+            query = f'select limpezas.id, limpezas.data from limpezas where carro={car_id} order by limpezas.id desc limit 1'
+
+            response = self.database.commit_with_return(query)[0]
+
+            ultima_limpeza = {
+                'LimpezaId' : response[0],
+                'LimpezaData' : response[1]
+            }
+            self.r = {
+                'message' : ultima_limpeza,
+                'status'  : 200
+            }
+        except Exception as e:
+            self.r = {
+                    'message' : {
+                        'error' : str(e)
+                    },
+                    'status'  : 404
+                }
+        return self.r
+
+
+    def buscar_limpeza(self, data):
+        try:
+            limpeza_id = data['LimpezaId']
+
+            query = f'select data from limpezas where id = {limpeza_id}'
+            limpeza = self.database.commit_with_return(query)[0][0]
+
+            self.r = {
+                'message' : limpeza,
+                'status'  : 200
+            }
+        except Exception as e:
+            self.r = {
+                    'message' : {
+                        'error' : str(e)
+                    },
+                    'status'  : 404
+                }
+        return self.r
+        

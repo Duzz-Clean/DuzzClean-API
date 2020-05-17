@@ -123,7 +123,7 @@ def save_usuario():
     data = request.get_json()
     response = backend.novo_usuario(data)
     status = int(response['status'])
-    return jsonify(data), status
+    return jsonify(response), status
 
 
 
@@ -154,7 +154,7 @@ def avaliacao():
     data = request.get_json()
     response = backend.avaliacao_do_usuario(data)
     status = int(response['status'])
-    return jsonify(data), status
+    return jsonify(response), status
 
 
 #pesquisar situação do carro, e sua proxima manutenção.
