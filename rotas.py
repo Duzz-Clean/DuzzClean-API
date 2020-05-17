@@ -53,7 +53,7 @@ def save_usuario():
     data = request.get_json()
     response = backend.novo_usuario(data)
     status = int(response['status'])
-    return jsonify(data), status
+    return jsonify(response), status
 
 
 
@@ -83,7 +83,7 @@ def avaliacao():
     data = request.get_json()
     response = backend.nova_avaliacao(data)
     status = int(response['status'])
-    return jsonify(data), status
+    return jsonify(response), status
 
 
 @app.route ('/recusa_notificacao', methods=['POST'])
