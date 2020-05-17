@@ -124,19 +124,14 @@ class Backend():
         try:
             license_plate = data['LicensePlate']
             date = data['Date']
-            birth_type = data['BirthType']
-            km = data['Km']
-            clean_type = data['CleanType']
 
             car_id = self.database.return_car_id(license_plate)
             columns = self.database.return_columns('limpezas')
 
             values = [
+                'Null',
                 car_id,
-                date,
-                km,
-                birth_type,
-                clean_type
+                date
             ]
 
             query = self.gera_query.inserir_na_tabela('limpezas', list(columns.keys()), values)
@@ -161,13 +156,13 @@ class Backend():
     def nova_manutencao(self, data):
         try:
             license_plate = data['LicensePlate']
-            type = data['Type']
+            _type = data['Type']
             date = data['Date']
             date_future = ['NextTime']
 
             car_id = self.database.return_car_id(license_plate)
             columns = self.database.return_columns('limpezas_geral')
-            values = car_id
+            values = ['Null', car_id]
             values.append([x for x in list(data.values())[1:]])
 
             query = self.gera_query.inserir_na_tabela('manutencoes', list(columns.keys()), values)
@@ -219,9 +214,8 @@ class Backend():
         
             columns = self.database.return_columns('notificacoes_recusas')
             car_id = self.database.return_car_id(license_plate)
-            values = car_id
-            values.append([x for x in list(data.values())[1:]])
-            query = self.gera_query.inserir_na_tabela('notificacoes_recusadas', columns, [car_id, date, km])
+            values = ['Null', car_id, date, km]
+            query = self.gera_query.inserir_na_tabela('notificacoes_recusadas', columns, values)
 
             self.database.commit_without_return(query)
 
@@ -248,8 +242,8 @@ class Backend():
 
             car_id = self.database.return_car_id(license_plate)
             columns = self.database.return_columns('carros_satisfactions')
-
-            query = self.gera_query.inserir_na_tabela('carros_satisfacao', columns, [car_id, rating, comment])
+            values = ['Null', car_id, rating, comment]
+            query = self.gera_query.inserir_na_tabela('carros_satisfacao', columns, values)
             self.database.commit_without_return(query)
 
             self.r = {
@@ -271,11 +265,11 @@ class Backend():
     def solicitar_limpeza(self, data):
         try:
             license_plate = data['LicensePlate']
-            requesting_user = data['RequestingUser']
+            user = data['User']
             
             car_id = self.database.return_car_id(license_plate)
 
-            query = self.gera_query.inserir_na_tabela('notificacoes', ['carro', 'tipo', 'usuario'], [car_id, 0, requesting_user])    
+            query = self.gera_query.inserir_na_tabela('notificacoes', ['carro', 'tipo', 'usuario'], [car_id, 0, user])    
             
             self.database.commit_without_return(query)
 
