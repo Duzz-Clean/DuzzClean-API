@@ -119,7 +119,7 @@ class Gera_query(object):
                     self.query += ", "
             self.query += ")"
 
-
+        print(self.query)
         return self.query
 
 

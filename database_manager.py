@@ -84,7 +84,6 @@ class Database():
 
     def commit_with_return(self, query):
         results = None
-        print(query)
         self.connect()
         try:
             self.cursor.execute(query)
@@ -119,7 +118,7 @@ class Database():
 
 
     def return_user_id(self, username):
-        query = f'select id from usuarios where login = "{username}"'
+        query = f'select id from usuarios where username = "{username}"'
 
         user_id = self.commit_with_return(query)[0][0]
 

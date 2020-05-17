@@ -6,6 +6,7 @@ __author__ = 'Jonas Duarte'
 import random
 import string
 import hashlib
+import pyqrcode
 from mysql_manager import Gera_query
 from database_manager import Database
 from controller import Controller
@@ -17,6 +18,14 @@ class Backend():
         self.database = Database()
         self.gera_query = Gera_query()
         self.controller = Controller()
+
+
+    def gera_qrcode(self, license_plate):
+        qr_code = pyqrcode.create(license_plate)
+        path = f'qrCodes/{license_plate}.png'
+        qr_code.png(path, scale=10)
+
+        return path
 
 
     def gera_salt(self):
@@ -77,6 +86,36 @@ class Backend():
                     'error' : str(e)
                 },
                 'status' : 401
+            }
+
+        return self.r
+
+    
+    def novo_veiculo(self, data):
+        try:
+            license_plate = data['LicensePlate']
+            username = data['Username']
+
+            user_id = self.database.return_user_id(username)
+            columns = self.database.return_columns('carros')
+            codigo_qr = self.gera_qrcode(license_plate)
+
+            dados = ['Null', f'"{license_plate}"', f'"{codigo_qr}"', user_id]
+
+            query = self.gera_query.inserir_na_tabela('carros', columns, dados)
+            self.database.commit_without_return(query)
+
+            self.r = {
+                'message' : 'OK',
+                'status'  : 200
+            }
+    
+        except Exception as e:
+            self.r = {
+                'message' : {
+                    'error' : str(e)
+                },
+                'status' : 400
             }
 
         return self.r
