@@ -82,6 +82,10 @@ create table notificacoes_recusadas
     `carro` INT(12) NOT NULL, -- Chave estrangeira de carros ID
     `data` DATE NOT NULL
 )ENGINE = InnoDB;
+
+INSERT INTO `tipos_usuarios` (`id`, `descricao`) VALUES (NULL, 'Usuário'), (NULL, 'Motorista'), (NULL, 'DuzzClean');
+INSERT INTO `notificacoes_tipos` (`id`, `descricao`) VALUES (NULL, 'Solicitação de Limpeza');
+
 --
 ALTER TABLE carros_satisfacoes
 ADD CONSTRAINT fk_carro FOREIGN KEY (carro) REFERENCES carros(id);
