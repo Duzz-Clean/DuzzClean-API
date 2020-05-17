@@ -291,7 +291,9 @@ class Backend():
 
     def buscar_notificacoes(self, data):
         try:
-            user_id = data['UserId']
+            username = data['Username']
+
+            user_id = self.database.return_user_id(username)
 
             notifications = self.database.return_notifications(user_id)
 

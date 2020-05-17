@@ -1,4 +1,3 @@
-DROP DATABASE dclean;
 CREATE DATABASE dclean;
 use dclean;
 
@@ -10,7 +9,7 @@ Criação das tabelas de usuários
 create table usuarios
 (
     `id` INT(12) PRIMARY KEY AUTO_INCREMENT,
-    `username` VARCHAR(50) UNIQUE NOT NULL,
+    `username` VARCHAR(50) UNIQUE NOT NULL, 
     `first_name` VARCHAR(50) NOT NULL,
     `second_name` VARCHAR(100) NOT NULL,
     `photo_path` VARCHAR(100),
@@ -116,3 +115,21 @@ ADD CONSTRAINT fk_nascimento FOREIGN KEY (nascimento) REFERENCES nascimentos(id)
 --
 ALTER TABLE notificacoes_recusadas 
 ADD CONSTRAINT fk_carro3 FOREIGN KEY (carro) REFERENCES carros(id);
+--
+ALTER TABLE usuarios
+ADD CONSTRAINT fk_tipos_usuarios FOREIGN KEY (type) REFERENCES tipos_usuarios(id);
+--
+ALTER TABLE carros
+ADD CONSTRAINT fk_usuarios FOREIGN KEY (usuario) REFERENCES usuarios(id);
+--
+ALTER TABLE manutencoes
+ADD CONSTRAINT fk_manutencoes_tipos FOREIGN KEY (tipo) REFERENCES manutencoes_tipos(id);
+--
+ALTER TABLE notificacoes
+ADD CONSTRAINT fk_carro4 FOREIGN KEY (carro) REFERENCES carros(id),
+ADD CONSTRAINT fk_notificacoes_tipos FOREIGN KEY (tipo) REFERENCES notificacoes_tipos(id),
+ADD CONSTRAINT fk_usuarios2 FOREIGN KEY (usuario) REFERENCES usuarios(id);
+--
+ALTER TABLE notificacoes_recusadas
+ADD CONSTRAINT fk_notificacoes FOREIGN KEY (notificacao) REFERENCES notificacoes(id),
+ADD CONSTRAINT fk_carro5 FOREIGN KEY (carro) REFERENCES carros(id);

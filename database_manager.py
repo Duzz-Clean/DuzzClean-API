@@ -1,3 +1,8 @@
+#encoding utf-8
+
+#__author__ = Jonas Duarte, duarte.jsystem@gmail.com
+#Python3
+
 import MySQLdb as mdb
 import configparser
 from mysql_manager import Gera_query
