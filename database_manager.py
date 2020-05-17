@@ -159,3 +159,25 @@ class Database():
 
         return notifications
 
+    
+    def return_resume_of_vehicle(self, car_id):
+        query = 'select AVG(carros_satisfacoes.satisfacao) as "Média de Satisfação", COUNT(DISTINCT(limpezas.id)) as '
+        query += '"Limpezas Realizadas", COUNT(DISTINCT(notificacoes.id)) as "Notificações Recebidas", '
+        query += 'COUNT(DISTINCT(notificacoes_recusadas.notificacao)) as "Notificações Recusadas" '
+        query += 'from carros '
+        query += 'inner join carros_satisfacoes on carros.id=carros_satisfacoes.carro '
+        query += 'inner join limpezas on carros.id=limpezas.carro '
+        query += 'inner join notificacoes on carros.id=notificacoes.carro '
+        query += 'inner join notificacoes_recusadas on carros.id=notificacoes_recusadas.carro '
+        query += f'where carros.id = {car_id} and notificacoes.enviada = True and '
+        query += f'notificacoes.tipo = 1 and notificacoes_recusadas.tipo = 1'
+
+        response_db = self.commit_with_return(query)[0]
+        info_vehicle = {
+            'MediaSatisfação' : response_db[0],
+            'LimpezasRealizadas' : response_db[1],
+            'NotificacoesRecebidas' : response_db[2],
+            'NotificacoesRecusadas' : response_db[3]
+        }
+
+        return info_vehicle
