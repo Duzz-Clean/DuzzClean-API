@@ -79,6 +79,7 @@ class Database():
 
     def commit_with_return(self, query):
         results = None
+        print(query)
         self.connect()
         try:
             self.cursor.execute(query)
@@ -103,9 +104,53 @@ class Database():
 
         return dict_columns
 
+
     def return_car_id(self, license_plate):
         query = self.gerador_de_query.search_car_id(license_plate)
 
         car_id = self.commit_with_return(query)[0][0]
 
         return car_id
+
+
+    def return_user_id(self, username):
+        query = f'select id from usuarios where login = "{username}"'
+
+        user_id = self.commit_with_return(query)[0][0]
+
+        return user_id
+
+
+    def return_salt(self, username):
+        query = f'select salt from usuarios where login = "{username}"'
+
+        salt = self.commit_with_return(query)[0][0]
+
+        return salt
+
+
+    def return_password(self, username, password):
+        query = f'select password from usuarios where login = "{username}" and password = "{password}"'
+
+        password = self.commit_with_return(query)[0][0]
+
+        return password
+
+    
+    def return_notifications(self, user_id):
+        query = 'select carros.placa, notificacoes_tipos.descricao, corpo from notificacoes '
+        query += 'inner join carros on notificacoes.carro = carros.id '
+        query += 'inner join notificacoes_tipos on notificacoes.tipo = notificacoes_tipos.id '
+        query += f'where enviada = False and notificacoes.usuario = {user_id} '
+        
+
+        notifications = {
+
+        }
+        responses = self.commit_with_return(query)
+        
+        for response in responses:
+            notifications[response[0]] = [response[x+1] for x in range(len(response[1:]))]
+
+        return notifications
+
