@@ -3,77 +3,7 @@ from flask import Flask, jsonify, request
 from model import Backend
 app = Flask(__name__)
 backend = Backend()
-''' 
-SOMENTE PARA TESTE
 
-motoristas = [
-    {
-        'nome': 'Joao Pablo',
-        'placa': '123',
-        'ultima_limpeza': '20-10',
-        'limpezas_recusadas': 3,
-
-        'nova_manutencao':{
-            'dia': '10-89',
-            'km': '15000'
-        }
-    },
-    {
-        'nome': 'Jonas',
-        'placa': '1234',
-        'ultima_limpeza': '21-10',
-        'limpezas_recusadas': 8,
-
-        'nova_manutencao':{
-            'dia': '17-9',
-            'km': '250'
-        }
-    }, 
-    {
-        'nome': 'Matheus',
-        'placa': '12345',
-        'ultima_limpeza': '20-10',
-        'limpezas_recusadas': 2,
-
-        'nova_manutencao':{
-            'dia': '7-01',
-            'km': '58795'
-        }
-    }
-]
-
-usuarios = [
-    {
-        'nome': 'diego',
-        'cpf': 1
-    },
-    {
-        'nome': 'usuario2',
-        'cpf': 2
-    }
-]
-
-nova_limpeza = [
-    {
-        'usuario': 1, #cpf do usuario que ta solicitando nova limpeza
-        'carro': '123ijk', #placa do carro que ta recebendo a solicitação
-        'aceito': 'true' #boolen no bd pra aceitar ou nao a limpeza <3
-    },
-    {
-        'usuario': 2,
-        'carro': '584',
-        'aceito': 'false'
-    }
-]
-
-avaliacao_do_usuario = [ #avaliação do usuario a respeito de UM UNICO carro
-    {
-        'usuario': 2, #cpf usuario ou algo q o identifica
-        'carro': '4897s', #placa do carro ou algo q o identifica
-        'avaliacao': 'UMA BOSTA' #avaliacao do cliente
-    }
-]
-'''
 
 #mostrar json de motoristas - FUNCIONANDO
 @app.route('/veiculos', methods=['GET'])
@@ -140,27 +70,59 @@ def ultimalimpeza(ultima_limpeza):
 
 #usuario solicita nova limpeza - FUNCIONANDO
 @app.route('/nova_limpeza', methods=['POST'])
-def solicitacao_limpeza():
+def nova_limpeza():
     data = request.get_json()
     response = backend.nova_limpeza(data)
     status = int(response['status'])
     return jsonify(data), status
 
 
-
 #avalicao do cliente a respeito de UM carro(QRcode) - FUNCIONANDO
-@app.route('/avaliacao_do_usuario', methods=['POST'])
+@app.route('/nova_avaliacao', methods=['POST'])
 def avaliacao():
     data = request.get_json()
-    response = backend.avaliacao_do_usuario(data)
+    response = backend.nova_avaliacao(data)
     status = int(response['status'])
     return jsonify(data), status
 
 
-#pesquisar situação do carro, e sua proxima manutenção.
-@app.route('/veiculos/nova_manutencao/<string:placa>', methods=['GET'])
-def nova_manutencao(placa):
-    pass
+@app.route ('/recusa_notificacao', methods=['POST'])
+def recusa_notificacao():
+    data = request.json()
+    response = backend.recusa_notificacao(data)
+    status = int(response['status'])
+    return jsonify(data), status
+
+@app.route ('/grava_envio_notificao', methods=['POST'])
+def grava_envio_notificao():
+    data = request.json()
+    response = backend.grava_envio_notificao(data)
+    status = int(response['status'])
+    return jsonify(data), status
+
+@app.route ('/solicitar_limpeza', methods=['POST'])
+def solicitar_limpeza():
+    data = request.json()
+    response = backend.solicitar_limpeza(data)
+    status = int(response['status'])
+    return jsonify(data), status
+
+@app.route ('/autenticar_usuario', methods=['POST'])
+def autenticar_usuario():
+    data = request.json()
+    response = backend.autenticar_usuario(data)
+    status = int(response['status'])
+    return jsonify(data), status
+
+@app.route ('/buscar_notificacoes', methods=['POST'])
+def buscar_notificacoes():
+    data = request.json()
+    response = backend.buscar_notificacoes(data)
+    status = int(response['status'])
+    return jsonify(data), status
+
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+# FALTANDO JONAS FAZER NO ARQUIVO "model.py" A FUNÇÃO DE NOVO VEICULO
