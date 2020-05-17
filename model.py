@@ -3,6 +3,7 @@
 #__author__ = Jonas Duarte, duarte.jsystem@gmail.com
 #Python3
 __author__ = 'Jonas Duarte'
+
 import random
 import string
 import hashlib
