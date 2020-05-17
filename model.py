@@ -3,14 +3,10 @@
 #__author__ = Jonas Duarte, duarte.jsystem@gmail.com
 #Python3
 __author__ = 'Jonas Duarte'
-import random
-import string
-import hashlib
+
 from mysql_manager import Gera_query
 from database_manager import Database
 from controller import Controller
-from random import randint
-
 
 class Backend():
     def __init__(self):
@@ -18,68 +14,6 @@ class Backend():
         self.gera_query = Gera_query()
         self.controller = Controller()
 
-
-    def gera_salt(self):
-        letras = string.ascii_uppercase
-
-        for x in range(0, 100):
-            salt = ''.join(random.choice(letras) for _ in range(3))
-            salt += str(randint(0,9))
-            salt += ''.join(random.choice(letras) for _ in range(3))
-
-        return salt
-
-
-    def compare_password(self, username, password):
-        passw = self.database.return_password(username, password)
-
-        if passw == password:
-            return True
-        else:
-            return False
-
-
-    def crypto(self, password, salt):
-        password = hashlib.md5(str(password + salt).encode())
-        password = password.hexdigest()
-
-        return password
-
-
-    def novo_usuario(self, data):
-        try:
-            login = data['Username']
-            password = data['Password']
-            first_name = data['FirstName']
-            second_name = data['SecondName']
-            user_type   = data['UserType']
-
-            salt = self.gera_salt()
-
-            password = self.crypto(password, salt)
-
-            columns = self.database.return_columns('usuarios')
-            columns.pop('id')
-            dados = [login, first_name, second_name, '', password, salt, user_type]
-
-            query = self.gera_query.inserir_na_tabela('usuarios', columns, dados, string=True)
-
-            self.database.commit_without_return(query)
-
-            self.r = {
-                'message' : 'OK',
-                'status'  : 200
-            }
-
-        except Exception as e:
-            self.r = {
-                'message' : {
-                    'error' : str(e)
-                },
-                'status' : 401
-            }
-
-        return self.r
 
     def nova_limpeza(self, data):
         try:
@@ -252,58 +186,4 @@ class Backend():
                 'status' : 400
             }
         
-        return self.r
-
-
-    def autenticar_usuario(self, data):
-        try:
-            username = data['Username']
-            password = data['Password']
-
-            
-            salt = self.database.return_salt(username)
-
-            password = self.crypto(password, salt)
-
-            response = self.compare_password(username, password)
-
-            if response:
-                self.r = {
-                    'message' : 'OK',
-                    'status'  : 200
-                }
-            else:
-                self.r = {
-                    'message' : {
-                        'error' : 'incorrect username or password'
-                    },
-                    'status'  : 404
-                }
-        except Exception as e:
-            self.r = {
-                    'message' : {
-                        'error' : str(e)
-                    },
-                    'status'  : 404
-                }
-        return self.r
-
-
-    def buscar_notificacoes(self, data):
-        try:
-            user_id = data['UserId']
-
-            notifications = self.database.return_notifications(user_id)
-
-            self.r = {
-                'message' : notifications,
-                'status'  : 200
-            }
-        except Exception as e:
-            self.r = {
-                    'message' : {
-                        'error' : str(e)
-                    },
-                    'status'  : 404
-                }
         return self.r

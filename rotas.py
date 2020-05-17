@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, jsonify, request
-from model import Backend
 
 app = Flask(__name__)
-
-backend = Backend()
 
 motoristas = [
     {
@@ -78,43 +75,55 @@ avaliacao_do_usuario = [ #avaliação do usuario a respeito de UM UNICO carro
 #mostrar json de motoristas - FUNCIONANDO
 @app.route('/motoristas', methods=['GET'])
 def home_motoristas():
-    pass
+    return jsonify(motoristas), 200
 
 #mostrar json de usuarios - FUNCIONANDO
 @app.route('/usuarios', methods=['GET'])
 def home_usuarios():
-    pass
+    return jsonify(usuarios), 200
 
 #mostrar json de limpezas solicitadas - FUNCIONANDO
 @app.route('/nova_limpeza', methods=['GET'])
 def home_nova_limpeza():
-    pass
+    return jsonify(nova_limpeza), 200
 
 #mostrar json de avaliacao do usuario a respeito de UM UNIICO carro - FUNCIONANDO 
 @app.route('/avaliacao_do_usuario', methods=['GET'])
 def home_avalicao():
-    pass
+    return jsonify(avaliacao_do_usuario), 200
 
+    
 #excluir carro - FUNCIONANDO
 @app.route('/motoristas/<string:placa>', methods=['DELETE'])
 def excluir_carro(placa):
-   pass
+    pass
+
 
 #excluir usuario - FUNCIONANDO
 @app.route('/usuarios/<int:cpf>', methods=['DELETE'])
 def excluir_usuario(cpf):
     pass
 
+
+
+#adicionar novo motorista - FUNCIONANDO
+@app.route('/motoristas', methods=['POST'])
+def save_motorista():
+    data = request.get_json()
+    response = backend.novo_motorista(data)
+    status = int(response['status'])
+    return jsonify(data), status
+
+
 #adicionar novo usuario - FUNCIONANDO
 @app.route('/usuarios', methods=['POST'])
 def save_usuario():
     data = request.get_json()
-    
     response = backend.novo_usuario(data)
-    
     status = int(response['status'])
- 
     return jsonify(data), status
+
+
 
 #pesquisar por placa - FUNCIONANDO
 @app.route('/motoristas/<string:placa>', methods=['GET'])
@@ -126,15 +135,25 @@ def por_placa(placa):
 def ultimalimpeza(ultima_limpeza):
     pass
 
+
 #usuario solicita nova limpeza - FUNCIONANDO
 @app.route('/nova_limpeza', methods=['POST'])
 def solicitacao_limpeza():
-    pass
+    data = request.get_json()
+    response = backend.nova_limpeza(data)
+    status = int(response['status'])
+    return jsonify(data), status
+
+
 
 #avalicao do cliente a respeito de UM carro(QRcode) - FUNCIONANDO
 @app.route('/avaliacao_do_usuario', methods=['POST'])
 def avaliacao():
-    pass
+    data = request.get_json()
+    response = backend.avaliacao_do_usuario(data)
+    status = int(response['status'])
+    return jsonify(data), status
+
 
 #pesquisar situação do carro, e sua proxima manutenção.
 @app.route('/motoristas/nova_manutencao/<string:placa>', methods=['GET'])
