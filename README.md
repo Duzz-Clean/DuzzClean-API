@@ -141,6 +141,9 @@ Os serviços estarão listados no fim deste documento, porém também estão dis
     Entrada: 
         Variável:
             license_plate = Placa do carro
+    Retorno:
+        JSON:
+            ["Message"] = Chave valor do resumo ou Descrição de erro
 *__/buscar_ultima_limpeza_veiculo__*
 
     Função : Encaminha para mostrar quando foi a última limpeza do veículo.
@@ -148,3 +151,6 @@ Os serviços estarão listados no fim deste documento, porém também estão dis
     Entrada:
         Variável:
             license_plate = Placa do carro
+    Retorno:
+        JSON:
+            ["Message"] = Chave valor de limpeza ou Descrição de erro
