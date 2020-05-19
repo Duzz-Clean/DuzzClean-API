@@ -44,11 +44,11 @@ def novo_veiculo():
     data = request.get_json()
     response = backend.novo_veiculo(data)
     status = int(response['status'])
-    return jsonify(data), status
+    return jsonify(response), status
 
 
 #adicionar novo usuario - FUNCIONANDO
-@app.route('novo_usuario', methods=['POST'])
+@app.route('/novo_usuario', methods=['POST'])
 def novo_usuario():
     data = request.get_json()
     response = backend.novo_usuario(data)
@@ -64,7 +64,6 @@ def nova_limpeza():
     response = backend.nova_limpeza(data)
     status = int(response['status'])
     return jsonify(response), status
-
 
 #avalicao do cliente a respeito de UM carro(QRcode) - FUNCIONANDO
 @app.route('/nova_avaliacao', methods=['POST'])
@@ -103,34 +102,40 @@ def autenticar_usuario():
     status = int(response['status'])
     return jsonify(response), status
 
-@app.route ('/buscar_notificacoes', methods=['POST'])
-def buscar_notificacoes():
-    data = request.json()
+@app.route ('/buscar_notificacoes/<string:username>', methods=['GET'])
+def buscar_notificacoes(username):
+    data = request.get_json()
     response = backend.buscar_notificacoes(data)
     status = int(response['status'])
     return jsonify(response), status
 
-@app.route ('/buscar_limpezas_veiculo', methods=['POST'])
-def buscar_limpezas_veiculo():
-    data = request.json()
+@app.route ('/buscar_limpezas_veiculo/<string:license_plate>', methods=['GET'])
+def buscar_limpezas_veiculo(license_plate):
+    data = request.get_json()
     response = backend.buscar_limpezas_veiculo(data)
     status = int(response['status'])
     return jsonify(response), status
 
-@app.route ('/buscar_resumo_veiculo', methods=['POST'])
-def buscar_resumo_veiculo():
-    data = request.json()
+@app.route ('/buscar_resumo_veiculo/<string:license_plate>', methods=['GET'])
+def buscar_resumo_veiculo(license_plate):
+    data = request.get_json()
     response = backend.buscar_resumo_veiculo(data)
     status = int(response['status'])
     return jsonify(response), status
 
-@app.route ('/buscar_ultima_limpeza_veiculo', methods=['POST'])
-def buscar_ultima_limpeza_veiculo():
-    data = request.json()
+@app.route ('/buscar_ultima_limpeza_veiculo/<string:license_plate>', methods=['GET'])
+def buscar_ultima_limpeza_veiculo(license_plate):
+    data = request.get_json()
     response = backend.buscar_ultima_limpeza_veiculo(data)
     status = int(response['status'])
     return jsonify (response), status
 
+@app.route ('/buscar_limpeza/<string:license_plate>', methods=['GET'])
+def buscar_limpeza(license_plate):
+    data = request.get_json()
+    response = backend.buscar_limpeza(data)
+    status = int(response['status'])
+    return jsonify (response), status
 
 
 
