@@ -211,11 +211,11 @@ class Backend():
         try:
             license_plate = data['LicensePlate']
             date = data['Date']
-            km = data['Km']
+            notificacao_id = data["NotificationId"]
         
             columns = self.database.return_columns('notificacoes_recusas')
             car_id = self.database.return_car_id(license_plate)
-            values = ['Null', car_id, date, km]
+            values = ['Null', notificacao_id, 1, car_id, date]
             query = self.gera_query.inserir_na_tabela('notificacoes_recusadas', columns, values)
 
             self.database.commit_without_return(query)
@@ -266,11 +266,12 @@ class Backend():
     def solicitar_limpeza(self, data):
         try:
             license_plate = data['LicensePlate']
-            user = data['User']
+            username = data['Username']
             
+            user_id = self.database.return_user_id(username)
             car_id = self.database.return_car_id(license_plate)
 
-            query = self.gera_query.inserir_na_tabela('notificacoes', ['carro', 'tipo', 'usuario'], [car_id, 0, user])    
+            query = self.gera_query.inserir_na_tabela('notificacoes', ['carro', 'tipo', 'usuario'], [car_id, 0, username])    
             
             self.database.commit_without_return(query)
 
