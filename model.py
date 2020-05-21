@@ -8,6 +8,7 @@ import random
 import string
 import hashlib
 import pyqrcode
+from os import system
 from mysql_manager import Gera_query
 from database_manager import Database
 from controller import Controller
@@ -21,10 +22,127 @@ class Backend():
         self.controller = Controller()
 
 
+    def gera_token(self, data):
+        try:
+            user_type = data['UserType']
+            username = data['Username']
+
+            user_id = self.database.return_user_id(username)
+
+            token = str(user_type)
+            token += self.crypto(username, user_id)
+
+            query = f"INSERT INTO `tokens` (`user`,`token`) VALUES ({int(user_id)}, '{token}');"
+            self.database.commit_without_return(query, database = 2)
+
+            self.r = {
+                'Message' : token
+            }
+        except Exception as e:
+            self.r = {
+                    'Message' : {
+                        'Error' : str(e)
+                    },
+                    'Status'  : 404
+                }
+        return self.r
+
+    
+    def confirm_token(self, data):
+        try:            
+            token = data['Token']
+            username = data['Username']
+            user_type = data['UserType']
+
+            user_id = self.database.return_user_id(username)
+
+            v_token = str(user_type)
+            v_token += self.crypto(username, user_id)
+
+            query = f'select user from tokens where token = {token}'
+            token_user = self.database.commit_with_return(query, database = 2)[0][0]
+
+            if v_token == token and token_user == user_id:
+                self.r = {
+                    'message' : 'OK',
+                    'status'  : 200
+                }
+            else:
+                raise Exception('Invalid credencials')
+        except Exception as e:
+            self.r = {
+                'message' : {
+                    'error' : str(e)
+                },
+                'status' : 401
+            }
+        return self.r
+
+
+    def active_token(self, token, user_id):
+        try:
+            query = f'select id from tokens where token = {token} and user = {user_id}'
+            token_id = self.database.commit_with_return(query, database = 2)[0][0]
+            
+            if len(id) > 0:
+                query = self.gera_query.alterar_dados_da_tabela('connections', ['active'], [1], where=True, 
+                    valor_where=token_id, coluna_verificacao='id')
+                self.database.commit_without_return(query, database = 2)
+            else:
+                query = self.gera_query.inserir_na_tabela('connections', ['token'], [token_id])
+                self.database.commit_without_return(query, database = 2)
+            
+            self.r = {
+                'Message' : {
+                    'token' : token,
+                    'token_id' : token_id
+                },
+                'Status'  : 200
+            }
+        except Exception as e:
+            self.r = {
+                'Message' : {
+                    'Error' : str(e)
+                },
+                'Status'  : 404
+            }
+
+
+    def deactive_token(self, token):
+        try:
+            query = f'select id from tokens where token = {token}'
+            token_id = self.database.commit_with_return(query, database = 2)[0][0]
+            
+            if len(id) > 0:
+                query = self.gera_query.alterar_dados_da_tabela('connections', ['active'], [0], where=True, 
+                    valor_where=token_id, coluna_verificacao='id')
+                self.database.commit_without_return(query, database = 2)
+            else:
+                query = self.gera_query.inserir_na_tabela('connections', ['token', 'active'], [token_id, 0])
+                self.database.commit_without_return(query, database = 2)
+            
+            self.r = {
+                'Message' : 'OK',
+                'Status'  : 200
+            }
+        except Exception as e:
+            self.r = {
+                'Message' : {
+                    'Error' : str(e)
+                },
+                'Status'  : 404
+            }
+
+
     def gera_qrcode(self, license_plate):
         qr_code = pyqrcode.create(license_plate)
         path = f'qrCodes/{license_plate}.png'
-        qr_code.png(path, scale=10)
+        try:
+            qr_code.png(path, scale=10)
+        except Exception as e:
+            print(e)
+            system('mkdir qrCodes')
+            self.gera_qrcode(license_plate)
 
         return path
 
@@ -58,7 +176,7 @@ class Backend():
 
     def novo_usuario(self, data):
         try:
-            login = data['Username']
+            username = data['Username']
             password = data['Password']
             first_name = data['FirstName']
             second_name = data['SecondName']
@@ -70,23 +188,31 @@ class Backend():
 
             columns = self.database.return_columns('usuarios')
             columns.pop('id')
-            dados = [login, first_name, second_name, '', password, salt, user_type]
+            dados = [username, first_name, second_name, '', password, salt, user_type]
 
             query = self.gera_query.inserir_na_tabela('usuarios', columns, dados, string=True)
 
             self.database.commit_without_return(query)
 
+            token = self.gera_token(data)
+
             self.r = {
-                'message' : 'OK',
-                'status'  : 200
+                'Message' : {
+                        'Username' : username,
+                        'FirstName' : first_name,
+                        'SecondName' : second_name,
+                        'UserType' : user_type,
+                        'Token' : token
+                },
+                'Status'  : 200
             }
 
         except Exception as e:
             self.r = {
-                'message' : {
-                    'error' : str(e)
+                'Message' : {
+                    'Error' : str(e)
                 },
-                'status' : 401
+                'Status' : 401
             }
 
         return self.r
@@ -94,6 +220,8 @@ class Backend():
     
     def novo_veiculo(self, data):
         try:
+            username = data['Username']
+            user_type = data['UserType']
             license_plate = data['LicensePlate']
             username = data['Username']
 
@@ -107,22 +235,24 @@ class Backend():
             self.database.commit_without_return(query)
 
             self.r = {
-                'message' : 'OK',
-                'status'  : 200
+                'Message' : 'OK',
+                'Status'  : 200
             }
     
         except Exception as e:
             self.r = {
-                'message' : {
-                    'error' : str(e)
+                'Message' : {
+                    'Error' : str(e)
                 },
-                'status' : 400
+                'Status' : 400
             }
 
         return self.r
 
     def nova_limpeza(self, data):
         try:
+            username = data['Username']
+            user_type = data['UserType']
             license_plate = data['LicensePlate']
             date = data['Date']
 
@@ -139,46 +269,16 @@ class Backend():
             self.database.commit_without_return(query)
 
             self.r = {
-                'message' : 'OK',
-                'status'  : 200
+                'Message' : 'OK',
+                'Status'  : 200
             }
     
         except Exception as e:
             self.r = {
-                'message' : {
-                    'error' : str(e)
+                'Message' : {
+                    'Error' : str(e)
                 },
-                'status' : 400
-            }
-
-        return self.r
-
-
-    def nova_manutencao(self, data):
-        try:
-            license_plate = data['LicensePlate']
-            _type = data['Type']
-            date = data['Date']
-            date_future = ['NextTime']
-
-            car_id = self.database.return_car_id(license_plate)
-            columns = self.database.return_columns('limpezas_geral')
-            values = ['Null', car_id]
-            values.append([x for x in list(data.values())[1:]])
-
-            query = self.gera_query.inserir_na_tabela('manutencoes', list(columns.keys()), values)
-            self.database.commit_without_return(query)
-
-            self.r = {
-                'message' : 'OK',
-                'status'  : 200
-            }
-        except Exception as e:
-            self.r = {
-                'message' : {
-                    'error' : str(e)
-                },
-                'status' : 400
+                'Status' : 400
             }
 
         return self.r
@@ -186,6 +286,8 @@ class Backend():
 
     def grava_envio_notificao(self, data):
         try:
+            username = data['Username']
+            user_type = data['UserType']
             notificacao_id = data['NotificationId']
             
             query = self.gera_query.alterar_dados_da_tabela('notificacoes', ['enviada'], ['TRUE'], 
@@ -194,21 +296,23 @@ class Backend():
             self.database.commit_without_return(query)
 
             self.r = {
-                'message' : 'OK',
-                'status'  : 200
+                'Message' : 'OK',
+                'Status'  : 200
             }
         except Exception as e:
             self.r = {
-                'message' : {
-                    'error' : str(e)
+                'Message' : {
+                    'Error' : str(e)
                 },
-                'status' : 400
+                'Status' : 400
             }
 
         return self.r
 
     def recusa_notificacao(self, data):
         try:
+            username = data['Username']
+            user_type = data['UserType']
             license_plate = data['LicensePlate']
             date = data['Date']
             notificacao_id = data["NotificationId"]
@@ -221,15 +325,15 @@ class Backend():
             self.database.commit_without_return(query)
 
             self.r = {
-                'message' : 'OK',
-                'status'  : 200
+                'Message' : 'OK',
+                'Status'  : 200
             }
         except Exception as e:
             self.r = {
-                'message' : {
-                    'error' : str(e)
+                'Message' : {
+                    'Error' : str(e)
                 },
-                'status' : 400
+                'Status' : 400
             }
 
         return self.r
@@ -237,6 +341,8 @@ class Backend():
 
     def nova_avaliacao(self, data):
         try:
+            username = data['Username']
+            user_type = data['UserType']
             license_plate = data['LicensePlate']
             rating = data['Rating']
             comment = data['Comment']
@@ -248,16 +354,16 @@ class Backend():
             self.database.commit_without_return(query)
 
             self.r = {
-                'message' : 'OK',
-                'status'  : 200
+                'Message' : 'OK',
+                'Status'  : 200
             }
 
         except Exception as e:
             self.r = {
-                'message' : {
-                    'error' : str(e)
+                'Message' : {
+                    'Error' : str(e)
                 },
-                'status' : 400
+                'Status' : 400
             }
 
         return self.r
@@ -265,6 +371,8 @@ class Backend():
 
     def solicitar_limpeza(self, data):
         try:
+            username = data['Username']
+            user_type = data['UserType']
             license_plate = data['LicensePlate']
             username = data['Username']
             
@@ -276,15 +384,15 @@ class Backend():
             self.database.commit_without_return(query)
 
             self.r = {
-                'message' : 'OK',
-                'status'  : 200
+                'Message' : 'OK',
+                'Status'  : 200
             }
         except Exception as e:
             self.r = {
-                'message' : {
-                    'error' : str(e)
+                'Message' : {
+                    'Error' : str(e)
                 },
-                'status' : 400
+                'Status' : 400
             }
         
         return self.r
@@ -293,8 +401,13 @@ class Backend():
     def autenticar_usuario(self, data):
         try:
             username = data['Username']
+            user_type = data['UserType']
             password = data['Password']
 
+            user_id = self.database.return_user_id(username)
+
+            if len(user_id) == 0:
+                raise Exception('Usuário não encontrado no banco de dados')
             
             salt = self.database.return_salt(username)
 
@@ -303,51 +416,87 @@ class Backend():
             response = self.compare_password(username, password)
 
             if response:
+                query = f'select first_name, second_name, photo_path from usuarios where id = {user_id}'
+                first_name, second_name, photo_path = self.database.commit_with_return(query)[0]
+                
+
+                token = self.gera_token(data)
+                token = token['Message']
                 self.r = {
-                    'message' : 'OK',
-                    'status'  : 200
+                    'Message' : {
+                        'Username' : username,
+                        'UserType' : user_type,
+                        'FirstName' : first_name,
+                        'SecondName' : second_name,
+                        'PhotoPath'  : photo_path,
+                        'Token' : token
+                    },
+                    'Status'  : 200
                 }
             else:
                 self.r = {
-                    'message' : {
-                        'error' : 'incorrect username or password'
+                    'Message' : {
+                        'Error' : 'incorrect username or password'
                     },
-                    'status'  : 404
+                    'Status'  : 404
                 }
         except Exception as e:
             self.r = {
-                    'message' : {
-                        'error' : str(e)
+                    'Message' : {
+                        'Error' : str(e)
                     },
-                    'status'  : 404
+                    'Status'  : 404
                 }
         return self.r
+
+
+    def realizar_logoff(self, data):
+        try:
+            username = data['Username']
+            user_type = data['UserType']
+            token = data['Token']
+
+            self.deactive_token(token)
+
+            self.r = {
+                'Message' : 'OK'
+            }
+        except Exception as e:
+            self.r = {
+                'Message' : {
+                    'Error' : str(e)
+                },
+                'Status' : 200
+            }
 
 
     def buscar_notificacoes(self, data):
         try:
             username = data['Username']
+            user_type = data['UserType']
 
             user_id = self.database.return_user_id(username)
 
             notifications = self.database.return_notifications(user_id)
 
             self.r = {
-                'message' : notifications,
-                'status'  : 200
+                'Message' : notifications,
+                'Status'  : 200
             }
         except Exception as e:
             self.r = {
-                    'message' : {
-                        'error' : str(e)
+                    'Message' : {
+                        'Error' : str(e)
                     },
-                    'status'  : 404
+                    'Status'  : 404
                 }
         return self.r
 
     
     def buscar_limpezas_veiculo(self, data):
         try:
+            username = data['Username']
+            user_type = data['UserType']
             license_plate = data['LicensePlate']
 
             car_id = self.database.return_car_id(license_plate)
@@ -368,20 +517,22 @@ class Backend():
                 }
 
             self.r = {
-                'message' : limpezas,
-                'status'  : 200
+                'Message' : limpezas,
+                'Status'  : 200
             }
         except Exception as e:
             self.r = {
-                    'message' : {
-                        'error' : str(e)
+                    'Message' : {
+                        'Error' : str(e)
                     },
-                    'status'  : 404
+                    'Status'  : 404
                 }
         return self.r
     
     def buscar_resumo_veiculo(self, data):
         try:
+            username = data['Username']
+            user_type = data['UserType']
             license_plate = data['LicensePlate']
 
             car_id = self.database.return_car_id(license_plate)
@@ -390,21 +541,23 @@ class Backend():
             informacoes = self.database.return_resume_of_vehicle(car_id)
 
             self.r = {
-                'message' : informacoes,
-                'status'  : 200
+                'Message' : informacoes,
+                'Status'  : 200
             }
         except Exception as e:
             self.r = {
-                    'message' : {
-                        'error' : str(e)
+                    'Message' : {
+                        'Error' : str(e)
                     },
-                    'status'  : 404
+                    'Status'  : 404
                 }
         return self.r
 
 
     def buscar_ultima_limpeza_veiculo(self, data):
         try:
+            username = data['Username']
+            user_type = data['UserType']
             license_plate = data['LicensePlate']
 
             car_id = self.database.return_car_id(license_plate)
@@ -418,36 +571,67 @@ class Backend():
                 'LimpezaData' : response[1]
             }
             self.r = {
-                'message' : ultima_limpeza,
-                'status'  : 200
+                'Message' : ultima_limpeza,
+                'Status'  : 200
             }
         except Exception as e:
             self.r = {
-                    'message' : {
-                        'error' : str(e)
+                    'Message' : {
+                        'Error' : str(e)
                     },
-                    'status'  : 404
+                    'Status'  : 404
                 }
         return self.r
 
 
     def buscar_limpeza(self, data):
         try:
+            username = data['Username']
+            user_type = data['UserType']
             limpeza_id = data['LimpezaId']
 
             query = f'select data from limpezas where id = {limpeza_id}'
             limpeza = self.database.commit_with_return(query)[0][0]
 
             self.r = {
-                'message' : limpeza,
-                'status'  : 200
+                'Message' : limpeza,
+                'Status'  : 200
             }
         except Exception as e:
             self.r = {
-                    'message' : {
-                        'error' : str(e)
+                    'Message' : {
+                        'Error' : str(e)
                     },
-                    'status'  : 404
+                    'Status'  : 404
                 }
         return self.r
         
+
+    def buscar_resumo_usuario(self, data):
+        try:
+            username = data['Username']
+            user_type = data['UserType']
+            user_id = self.database.return_user_id(username)
+
+            query = 'select type, first_name, second_name from usuarios where id = ' + str(user_id)
+            user_type, first_name, second_name = self.database.commit_with_return(query)[0]
+
+            usuario = {
+                'Username' : username,
+                'UserId'   : user_id,
+                'UserType' : user_type,
+                'FirstName': first_name,
+                'SecondName': second_name
+            }
+            self.r = {
+                'Message' : usuario,
+                'Status'  : 200
+            }
+        except Exception as e:
+            self.r = {
+                    'Message' : {
+                        'Error' : str(e)
+                    },
+                    'Status'  : 404
+                }
+        return self.r

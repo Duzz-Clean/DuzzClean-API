@@ -8,14 +8,15 @@ import configparser
 from mysql_manager import Gera_query
 
 class Database():
-    def __init__(self):
+    def __init__(self, database = 1):
         self.gerador_de_query = Gera_query()
         self.connected = False
+        self.database = database
 
 
-    def connect(self):
+    def connect(self, database):
         if not self.connected:
-            credencials = self.authenticate()
+            credencials = self.authenticate(database)
             address = credencials.get('AddressBank')
             name = credencials.get('NameBank')
             user = credencials.get('UserBank')
@@ -45,7 +46,7 @@ class Database():
         self.conected = False
         return True
 
-    def authenticate(self):
+    def authenticate(self, database):
         """
         Utiliza as informações presentes no glpi.cfg para\n
         retorná-las em forma de lista como credenciais
@@ -56,10 +57,15 @@ class Database():
         config = configparser.ConfigParser()
         config.read('conf.cfg')
 
-        address_bank = config.get('config_bank', 'address_bank')
-        name_bank = config.get('config_bank', 'name_bank')
-        user_bank = config.get('config_bank', 'user_bank')
-        password_bank = config.get('config_bank', 'password_bank')
+        if self.database == 1:
+            config_bank = 'config_bank_app'
+        else:
+            config_bank = 'config_bank_api'
+
+        address_bank = config.get(config_bank, 'address_bank')
+        name_bank = config.get(config_bank, 'name_bank')
+        user_bank = config.get(config_bank, 'user_bank')
+        password_bank = config.get(config_bank, 'password_bank')
         if password_bank == "''":
             password_bank = ''
 
@@ -71,8 +77,8 @@ class Database():
         }
 
 
-    def commit_without_return(self, query):
-        self.connect()
+    def commit_without_return(self, query, database = 1):
+        self.connect(database)
         try:
             self.cursor.execute(query)
         except:
@@ -82,9 +88,9 @@ class Database():
             self.disconnect()
             return True
 
-    def commit_with_return(self, query):
+    def commit_with_return(self, query, database = 1):
         results = None
-        self.connect()
+        self.connect(database)
         try:
             self.cursor.execute(query)
         except:

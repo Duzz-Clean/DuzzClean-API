@@ -9,6 +9,16 @@ Os serviços estarão listados no fim deste documento, porém também estão dis
 
 ##### Rotas:
 
+**_Atenção! Para uso das rotas, com excessão do novo usuário e autenticar usuário, é necessário informar as seguintes chaves-valores:_**
+
+    ["Username"] = Nome de usuario ou email,
+    ["UserType"] = Tipo do usuário,
+    ["Token"] = Token de acesso à aplicação
+
+
+**_As rotas obrigatórias para as demais estão descritas:_**
+
+
 *__/novo_veiculo__*
         
     Função : Encaminhar para fazer o cadastramento de um novo veículo
@@ -154,7 +164,7 @@ Os serviços estarão listados no fim deste documento, porém também estão dis
     Retorno:
         JSON:
             ["Message"] = Chave valor de limpeza ou Descrição de erro
-            
+
 *__/realizar_logoff__*
 
     Função : Realizar logoff
