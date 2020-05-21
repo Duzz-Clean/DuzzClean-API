@@ -8,7 +8,6 @@ from model import Backend
 app = Flask(__name__)
 backend = Backend()
 
-
 #adicionar novo motorista - FUNCIONANDO
 @app.route('/novo_veiculo', methods=['POST'])
 def novo_veiculo():
@@ -39,7 +38,6 @@ def novo_veiculo():
         })
     return response, status
 
-
 #adicionar novo usuario - FUNCIONANDO
 @app.route('/novo_usuario', methods=['POST'])
 def novo_usuario():
@@ -65,8 +63,6 @@ def novo_usuario():
             'Status' : 401
         })
     return response, status
-
-
 
 #usuario solicita nova limpeza - FUNCIONANDO
 @app.route('/nova_limpeza', methods=['POST'])
@@ -97,8 +93,6 @@ def nova_limpeza():
             'Status' : 401
         })
     return response, status
-
-
 
 #avalicao do cliente a respeito de UM carro(QRcode) - FUNCIONANDO
 @app.route('/nova_avaliacao', methods=['POST'])
@@ -131,7 +125,6 @@ def nova_avaliacao():
     return response, status
 
 
-
 @app.route ('/recusa_notificacao', methods=['POST'])
 def recusa_notificacao():
     try:
@@ -160,7 +153,6 @@ def recusa_notificacao():
             'Status' : 401
         })
     return response, status
-
 
 
 @app.route ('/grava_envio_notificao', methods=['POST'])
@@ -193,8 +185,6 @@ def grava_envio_notificao():
     return response, status
 
 
-
-
 @app.route ('/solicitar_limpeza', methods=['POST'])
 def solicitar_limpeza():
     try:
@@ -224,6 +214,7 @@ def solicitar_limpeza():
         })
     return response, status
 
+
 @app.route ('/autenticar_usuario', methods=['POST'])
 def autenticar_usuario():
     try:
@@ -250,10 +241,8 @@ def autenticar_usuario():
     return response, status
 
 
-
-
-@app.route ('/buscar_notificacoes/<string:username>', methods=['POST'])
-def buscar_notificacoes(username):
+@app.route ('/buscar_notificacoes', methods=['POST'])
+def buscar_notificacoes():
     try:
         data = request.get_json()
         if len(data) > 3:
@@ -282,9 +271,8 @@ def buscar_notificacoes(username):
     return response, status
 
 
-
-@app.route ('/buscar_limpezas_veiculo/<string:license_plate>', methods=['POST'])
-def buscar_limpezas_veiculo(license_plate):
+@app.route ('/buscar_limpezas_veiculo', methods=['POST'])
+def buscar_limpezas_veiculo():
     try:
         data = request.get_json()
         if len(data) > 4:
@@ -313,9 +301,8 @@ def buscar_limpezas_veiculo(license_plate):
     return response, status
 
 
-
-@app.route ('/buscar_resumo_veiculo/<string:license_plate>', methods=['POST'])
-def buscar_resumo_veiculo(license_plate):
+@app.route ('/buscar_resumo_veiculo', methods=['POST'])
+def buscar_resumo_veiculo():
     try:
         data = request.get_json()
         if len(data) > 4:
@@ -344,8 +331,8 @@ def buscar_resumo_veiculo(license_plate):
     return response, status
 
 
-@app.route ('/buscar_ultima_limpeza_veiculo/<string:license_plate>', methods=['POST'])
-def buscar_ultima_limpeza_veiculo(license_plate):
+@app.route ('/buscar_ultima_limpeza_veiculo', methods=['POST'])
+def buscar_ultima_limpeza_veiculo():
     try:
         data = request.get_json()
         if len(data) > 4:
@@ -374,8 +361,8 @@ def buscar_ultima_limpeza_veiculo(license_plate):
     return response, status
 
 
-@app.route ('/buscar_limpeza/<string:license_plate>', methods=['POST'])
-def buscar_limpeza(license_plate):
+@app.route ('/buscar_limpeza', methods=['POST'])
+def buscar_limpeza():
     try:
         data = request.get_json()
         if len(data) > 4:
@@ -402,6 +389,7 @@ def buscar_limpeza(license_plate):
             'Status' : 401
         })
     return response, status
+
 
 @app.route ('/realizar_logoff', methods=['POST'])
 def realizar_logoff():
@@ -431,9 +419,6 @@ def realizar_logoff():
             'Status' : 401
         })
     return response, status
-
-
-
 
 
 if __name__ == "__main__":
