@@ -49,7 +49,7 @@ create table limpezas
 (   
     `id` INT(12) PRIMARY KEY AUTO_INCREMENT,
     `carro` INT(12) NOT NULL, -- Chave estrangeira de carros ID
-    `data` DATE NOT NULL
+    `data` TIMESTAMP DEFAULT NOW()
 )ENGINE = InnoDB;
 --
 create table notificacoes 
@@ -80,7 +80,7 @@ create table notificacoes_recusadas
     `notificacao` INT(12) NOT NULL, -- Chave estrangeira de notificacoes ID
     `tipo` INT(12) NOT NULL, -- Chave estrangeira de notificacoes_tipos ID
     `carro` INT(12) NOT NULL, -- Chave estrangeira de carros ID
-    `data` DATE NOT NULL
+    `data` TIMESTAMP DEFAULT NOW()
 )ENGINE = InnoDB;
 
 INSERT INTO `tipos_usuarios` (`id`, `descricao`) VALUES (NULL, 'Usuário'), (NULL, 'Motorista'), (NULL, 'DuzzClean');
