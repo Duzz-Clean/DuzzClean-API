@@ -16,5 +16,3 @@ create table tokens(
 
 ALTER TABLE connections
 ADD CONSTRAINT fk_tokens FOREIGN KEY (token) REFERENCES tokens(id);
-
-INSERT INTO `tokens` (`token`) VALUES ('953J359p267d761M');
