@@ -8,10 +8,9 @@ import configparser
 from mysql_manager import Gera_query
 
 class Database():
-    def __init__(self, database = 1):
+    def __init__(self):
         self.gerador_de_query = Gera_query()
         self.connected = False
-        self.database = database
 
 
     def connect(self, database):
@@ -57,7 +56,7 @@ class Database():
         config = configparser.ConfigParser()
         config.read('conf.cfg')
 
-        if self.database == 1:
+        if database == 1:
             config_bank = 'config_bank_app'
         else:
             config_bank = 'config_bank_api'
@@ -132,7 +131,7 @@ class Database():
 
 
     def return_salt(self, username):
-        query = f'select salt from usuarios where login = "{username}"'
+        query = f'select salt from usuarios where username = "{username}"'
 
         salt = self.commit_with_return(query)[0][0]
 
@@ -140,7 +139,7 @@ class Database():
 
 
     def return_password(self, username, password):
-        query = f'select password from usuarios where login = "{username}" and password = "{password}"'
+        query = f'select password from usuarios where username = "{username}" and password = "{password}"'
 
         password = self.commit_with_return(query)[0][0]
 

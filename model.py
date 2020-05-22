@@ -30,15 +30,17 @@ class Backend():
             user_id = self.database.return_user_id(username)
 
             token = str(user_type)
-            token += self.crypto(username, user_id)
+            token += self.crypto(username, str(user_id))
 
-            query = f"INSERT INTO `tokens` (`user`,`token`) VALUES ({int(user_id)}, '{token}');"
+            query = f"INSERT INTO `tokens` (`user`,`token`) VALUES ({user_id}, '{token}');"
             self.database.commit_without_return(query, database = 2)
 
             self.r = {
-                'Message' : token
+                'Message' : token,
+                'Status'  : 200
             }
         except Exception as e:
+
             self.r = {
                     'Message' : {
                         'Error' : str(e)
@@ -46,6 +48,17 @@ class Backend():
                     'Status'  : 404
                 }
         return self.r
+
+
+    def search_token(self, user_id):
+        try:
+            query = f'select token from tokens where user = {user_id}' 
+            token = self.database.commit_with_return(query)[0][0]
+
+        except:
+            raise Exception('User ID não possui token')
+
+        return token
 
     
     def confirm_token(self, data):
@@ -60,9 +73,9 @@ class Backend():
             v_token += self.crypto(username, user_id)
 
             query = f'select user from tokens where token = {token}'
-            token_user = self.database.commit_with_return(query, database = 2)[0][0]
+            user_token = self.database.commit_with_return(query, database = 2)[0][0]
 
-            if v_token == token and token_user == user_id:
+            if v_token == token and user_token == user_id:
                 self.r = {
                     'message' : 'OK',
                     'status'  : 200
@@ -408,6 +421,11 @@ class Backend():
 
             if len(user_id) == 0:
                 raise Exception('Usuário não encontrado no banco de dados')
+
+            token = self.search_token(user_id)
+
+            if len(token) == 0:
+                raise Exception('User ID não possui token')
             
             salt = self.database.return_salt(username)
 
@@ -420,8 +438,7 @@ class Backend():
                 first_name, second_name, photo_path = self.database.commit_with_return(query)[0]
                 
 
-                token = self.gera_token(data)
-                token = token['Message']
+                self.active_token(token, user_id)
                 self.r = {
                     'Message' : {
                         'Username' : username,

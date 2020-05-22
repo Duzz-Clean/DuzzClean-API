@@ -14,29 +14,23 @@ def novo_veiculo():
     try:
         data = request.get_json()
         if len(data) > 4:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.novo_veiculo(data))
-        status = int(response['status'])
-
+        response = backend.novo_veiculo(data)
+        
     except Exception as e:
-        response = jsonify({
+        response = {
             'Message' : {
                 'Error' : str(e)
             },
             'Status' : 401
-        })
-    return response, status
+        }
+    status = int(response['status'])
+    return jsonify(response), 200
 
 #adicionar novo usuario - FUNCIONANDO
 @app.route('/novo_usuario', methods=['POST'])
