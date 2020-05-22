@@ -71,7 +71,6 @@ def nova_limpeza():
         if len(data) > 5:
             raise Exception('Request out of params')
 
-
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
@@ -95,7 +94,6 @@ def nova_avaliacao():
         data = request.get_json()
         if len(data) > 6:
             raise Exception('Request out of params')
-
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
@@ -122,7 +120,6 @@ def recusa_notificacao():
         if len(data) > 6:
             raise Exception('Request out of params')
 
-
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
@@ -146,7 +143,6 @@ def grava_envio_notificao():
         data = request.get_json()
         if len(data) > 4:
             raise Exception('Request out of params')
-
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
@@ -172,7 +168,6 @@ def solicitar_limpeza():
         if len(data) > 5:
             raise Exception('Request out of params')
 
-
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
@@ -197,7 +192,6 @@ def autenticar_usuario():
         if len(data) > 3:
             raise Exception('Request out of params')
 
-
         response = backend.autenticar_usuario(data)
 
     except Exception as e:
@@ -217,7 +211,6 @@ def buscar_notificacoes():
         data = request.get_json()
         if len(data) > 3:
             raise Exception('Request out of params')
-
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
@@ -267,7 +260,6 @@ def buscar_resumo_veiculo():
         if len(data) > 4:
             raise Exception('Request out of params')
 
-
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
@@ -291,7 +283,6 @@ def buscar_ultima_limpeza_veiculo():
         data = request.get_json()
         if len(data) > 4:
             raise Exception('Request out of params')
-
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
@@ -317,7 +308,6 @@ def buscar_limpeza():
         if len(data) > 4:
             raise Exception('Request out of params')
 
-
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
@@ -341,7 +331,6 @@ def realizar_logoff():
         data = request.get_json()
         if len(data) > 4:
             raise Exception('Request out of params')
-
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
