@@ -20,7 +20,7 @@ def novo_veiculo():
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.novo_veiculo(data))
+        response = backend.novo_veiculo(data)
 
     except Exception as e:
         response = {
@@ -42,7 +42,7 @@ def novo_usuario():
             raise Exception('Request out of params')
 
 
-        response = jsonify(backend.novo_usuario(data))
+        response = backend.novo_usuario(data)
 
     except Exception as e:
         response = {
@@ -67,7 +67,7 @@ def nova_limpeza():
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.nova_limpeza(data))
+        response = backend.nova_limpeza(data)
 
     except Exception as e:
         response = {
@@ -92,7 +92,7 @@ def nova_avaliacao():
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
 
-        response = jsonify(backend.nova_avaliacao(data))
+        response = backend.nova_avaliacao(data)
  
  
     except Exception as e:
@@ -118,7 +118,7 @@ def recusa_notificacao():
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.recusa_notificacao(data))
+        response = backend.recusa_notificacao(data)
 
     except Exception as e:
         response = {
@@ -143,7 +143,7 @@ def grava_envio_notificao():
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.grava_envio_notificao(data))
+        response = backend.grava_envio_notificao(data)
         
     except Exception as e:
         response = {
@@ -214,7 +214,7 @@ def buscar_notificacoes():
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.buscar_notificacoes(data))
+        response = backend.buscar_notificacoes(data)
 
     except Exception as e:
         response = {
@@ -238,7 +238,7 @@ def buscar_limpezas_veiculo():
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.buscar_limpezas_veiculo(data))
+        response = backend.buscar_limpezas_veiculo(data)
         
     except Exception as e:
         response = {
@@ -263,7 +263,7 @@ def buscar_resumo_veiculo():
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.buscar_resumo_veiculo(data))
+        response = backend.buscar_resumo_veiculo(data)
 
     except Exception as e:
         response = {
@@ -288,7 +288,7 @@ def buscar_ultima_limpeza_veiculo():
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.buscar_ultima_limpeza_veiculo(data))
+        response = backend.buscar_ultima_limpeza_veiculo(data)
 
     except Exception as e:
         response = {
@@ -313,7 +313,7 @@ def buscar_limpeza():
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.buscar_limpeza(data))
+        response = backend.buscar_limpeza(data)
 
     except Exception as e:
         response = {
@@ -338,7 +338,7 @@ def realizar_logoff():
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.realizar_logoff(data))
+        response = backend.realizar_logoff(data)
 
     except Exception as e:
         response = {
