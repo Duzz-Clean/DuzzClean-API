@@ -21,7 +21,6 @@ def novo_veiculo():
             raise Exception('Invalid Token')
             
         response = backend.novo_veiculo(data)
-
     except Exception as e:
         response = {
             'Message' : {
@@ -29,6 +28,7 @@ def novo_veiculo():
             },
             'Status' : 401
         }
+
     status = int(response['Status'])
     return jsonify(response), 200
 
@@ -40,7 +40,6 @@ def novo_usuario():
 
         if len(data) > 5:
             raise Exception('Request out of params')
-
 
         response = backend.novo_usuario(data)
 
