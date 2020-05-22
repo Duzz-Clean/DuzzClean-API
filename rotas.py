@@ -35,8 +35,8 @@ def novo_veiculo():
             },
             'Status' : 401
         }
-    status = int(response.get_json()['Status'])
-    return response, status
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 #adicionar novo usuario - FUNCIONANDO
 @app.route('/novo_usuario', methods=['POST'])
@@ -62,8 +62,8 @@ def novo_usuario():
             },
             'Status' : 401
         }
-    status = int(response.get_json()['Status'])
-    return response, status
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 #usuario solicita nova limpeza - FUNCIONANDO
 @app.route('/nova_limpeza', methods=['POST'])
@@ -92,8 +92,8 @@ def nova_limpeza():
             },
             'Status' : 401
         }
-    status = int(response.get_json()['Status'])
-    return response, status
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 #avalicao do cliente a respeito de UM carro(QRcode) - FUNCIONANDO
 @app.route('/nova_avaliacao', methods=['POST'])
@@ -123,8 +123,8 @@ def nova_avaliacao():
             },
             'Status' : 401
         }
-    status = int(response.get_json()['Status'])
-    return response, status
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 
 @app.route ('/recusa_notificacao', methods=['POST'])
@@ -153,8 +153,8 @@ def recusa_notificacao():
             },
             'Status' : 401
         }
-    status = int(response.get_json()['Status'])
-    return response, status
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 
 @app.route ('/grava_envio_notificao', methods=['POST'])
@@ -183,8 +183,8 @@ def grava_envio_notificao():
             },
             'Status' : 401
         }
-    status = int(response.get_json()['Status'])
-    return response, status
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 
 @app.route ('/solicitar_limpeza', methods=['POST'])
@@ -214,7 +214,7 @@ def solicitar_limpeza():
             'Status' : 401
         }
     status = int(response['Status'])
-    return jsonify(response), status
+    return jsonify(response), 200
 
 
 @app.route ('/autenticar_usuario', methods=['POST'])
@@ -241,7 +241,7 @@ def autenticar_usuario():
             'Status' : 401
         }
     status = int(response['Status'])
-    return jsonify(response), status
+    return jsonify(response), 200   
 
 
 @app.route ('/buscar_notificacoes', methods=['POST'])
@@ -270,8 +270,8 @@ def buscar_notificacoes():
             },
             'Status' : 401
         }
-    status = int(response.get_json()['Status'])
-    return response, status
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 
 @app.route ('/buscar_limpezas_veiculo', methods=['POST'])
@@ -300,8 +300,8 @@ def buscar_limpezas_veiculo():
             },
             'Status' : 401
         }
-    status = int(response.get_json()['Status'])
-    return response, status
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 
 @app.route ('/buscar_resumo_veiculo', methods=['POST'])
@@ -330,8 +330,8 @@ def buscar_resumo_veiculo():
             },
             'Status' : 401
         }
-    status = int(response.get_json()['Status'])
-    return response, status
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 
 @app.route ('/buscar_ultima_limpeza_veiculo', methods=['POST'])
@@ -360,8 +360,8 @@ def buscar_ultima_limpeza_veiculo():
             },
             'Status' : 401
         }
-    status = int(response.get_json()['Status'])
-    return response, status
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 
 @app.route ('/buscar_limpeza', methods=['POST'])
@@ -390,8 +390,8 @@ def buscar_limpeza():
             },
             'Status' : 401
         }
-    status = int(response.get_json()['Status'])
-    return response, status
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 
 @app.route ('/realizar_logoff', methods=['POST'])
@@ -420,8 +420,8 @@ def realizar_logoff():
             },
             'Status' : 401
         }
-    status = int(response.get_json()['Status'])
-    return response, status
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 
 if __name__ == "__main__":
