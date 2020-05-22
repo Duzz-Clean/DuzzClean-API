@@ -3,10 +3,20 @@
 #__author__ = Pablo Mariz, souzamariz27@gmail.com
 #Python3
 
+import configparser
 from flask import Flask, jsonify, request
 from model import Backend
 app = Flask(__name__)
 backend = Backend()
+
+def bind_server():
+    config = configparser.ConfigParser()
+    config.read('conf.cfg')
+
+    server_address = config.get('config_server', 'server_address')
+    server_port    = config.get('config_server', 'server_port')
+
+    return [server_address, server_port]
 
 #adicionar novo motorista - FUNCIONANDO
 @app.route('/novo_veiculo', methods=['POST'])
@@ -416,4 +426,5 @@ def realizar_logoff():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    server_address, server_port = bind_server()
+    app.run(host=server_address, port=server_port)
