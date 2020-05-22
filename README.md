@@ -113,7 +113,7 @@ Os serviços estarão listados no fim deste documento, porém também estão dis
 *__/autenticar_usuario__*
 
     Função : Encaminha onde o usuário será autenticado para entrar no app;
-    Método : GET
+    Método : POST
     Entrada:
         JSON:
             ["Username"] = Nome de usuário ou email
@@ -125,7 +125,7 @@ Os serviços estarão listados no fim deste documento, porém também estão dis
 *__/buscar_notificacoes__
 
     Função : Encaminha para busca as notificações recebidas;
-    Método : GET
+    Método : POST
     Entrada:
         Variável:
             username = Nome de usuário ou email
@@ -136,7 +136,7 @@ Os serviços estarão listados no fim deste documento, porém também estão dis
 *__/buscar_limpezas_veiculo__*
 
     Função : Encaminha para mostrar as limpezas do veículo;
-    Método : GET
+    Método : POST
     Entrada:
         Variável:
             license_plate = Placa do carro
@@ -147,7 +147,7 @@ Os serviços estarão listados no fim deste documento, porém também estão dis
 *__/buscar_resumo_veiculo__*
 
     Função : Encaminha para mostra ao cliente o resumo de um veículo;
-    Método : GET
+    Método : POST
     Entrada: 
         Variável:
             license_plate = Placa do carro
@@ -157,10 +157,22 @@ Os serviços estarão listados no fim deste documento, porém também estão dis
 *__/buscar_ultima_limpeza_veiculo__*
 
     Função : Encaminha para mostrar quando foi a última limpeza do veículo.
-    Método : GET
+    Método : POST
     Entrada:
         Variável:
             license_plate = Placa do carro
     Retorno:
         JSON:
             ["Message"] = Chave valor de limpeza ou Descrição de erro
+
+*__/realizar_logoff__*
+
+    Função : Realizar logoff
+    Método: POST
+    Entrada:
+        Variável:
+            Username = Nome de usuário ou email
+            UserType = Tipo de usuário (1, 2, 3)
+    Retorno:
+        JSON:
+            ["Message"] = "OK" ou Descrição de erro
