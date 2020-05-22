@@ -14,13 +14,7 @@ def novo_veiculo():
     try:
         data = request.get_json()
         if len(data) > 4:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
@@ -45,13 +39,8 @@ def novo_usuario():
         data = request.get_json()
 
         if len(data) > 5:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-            },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = jsonify(backend.novo_usuario(data))
 
@@ -71,13 +60,8 @@ def nova_limpeza():
     try:
         data = request.get_json()
         if len(data) > 5:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
@@ -101,13 +85,8 @@ def nova_avaliacao():
     try:
         data = request.get_json()
         if len(data) > 6:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
@@ -132,13 +111,8 @@ def recusa_notificacao():
     try:
         data = request.get_json()
         if len(data) > 6:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
@@ -162,13 +136,8 @@ def grava_envio_notificao():
     try:
         data = request.get_json()
         if len(data) > 4:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
@@ -192,13 +161,8 @@ def solicitar_limpeza():
     try:
         data = request.get_json()
         if len(data) > 5:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
@@ -222,14 +186,8 @@ def autenticar_usuario():
     try:
         data = request.get_json()
         if len(data) > 3:
-            e = {
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            }
-            print(e)
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.autenticar_usuario(data)
 
@@ -249,13 +207,8 @@ def buscar_notificacoes():
     try:
         data = request.get_json()
         if len(data) > 3:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
@@ -279,13 +232,7 @@ def buscar_limpezas_veiculo():
     try:
         data = request.get_json()
         if len(data) > 4:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
@@ -309,13 +256,8 @@ def buscar_resumo_veiculo():
     try:
         data = request.get_json()
         if len(data) > 4:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
@@ -339,13 +281,8 @@ def buscar_ultima_limpeza_veiculo():
     try:
         data = request.get_json()
         if len(data) > 4:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
@@ -369,13 +306,8 @@ def buscar_limpeza():
     try:
         data = request.get_json()
         if len(data) > 4:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
@@ -399,13 +331,8 @@ def realizar_logoff():
     try:
         data = request.get_json()
         if len(data) > 4:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
