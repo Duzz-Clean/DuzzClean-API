@@ -77,17 +77,17 @@ class Backend():
 
             if v_token == token and user_token == user_id:
                 self.r = {
-                    'message' : 'OK',
-                    'status'  : 200
+                    'Message' : 'OK',
+                    'Status'  : 200
                 }
             else:
                 raise Exception('Invalid credencials')
         except Exception as e:
             self.r = {
-                'message' : {
+                'Message' : {
                     'error' : str(e)
                 },
-                'status' : 401
+                'Status' : 401
             }
         return self.r
 
