@@ -95,20 +95,20 @@ class Backend():
     def active_token(self, token, user_id):
         try:
             query = f'select id from tokens where token = {token} and user = {user_id}'
-            token_id = self.database.commit_with_return(query, database = 2)[0][0]
-            
-            if len(id) > 0:
+            token_id = self.database.commit_with_return(query, database = 2)[0]
+        
+            if len(token_id) > 0:
                 query = self.gera_query.alterar_dados_da_tabela('connections', ['active'], [1], where=True, 
-                    valor_where=token_id, coluna_verificacao='id')
+                    valor_where=token_id[0], coluna_verificacao='id')
                 self.database.commit_without_return(query, database = 2)
             else:
-                query = self.gera_query.inserir_na_tabela('connections', ['token'], [token_id])
+                query = self.gera_query.inserir_na_tabela('connections', ['token'], [token_id[0]])
                 self.database.commit_without_return(query, database = 2)
             
             self.r = {
                 'Message' : {
                     'token' : token,
-                    'token_id' : token_id
+                    'token_id' : token_id[0]
                 },
                 'Status'  : 200
             }
@@ -124,14 +124,14 @@ class Backend():
     def deactive_token(self, token):
         try:
             query = f'select id from tokens where token = {token}'
-            token_id = self.database.commit_with_return(query, database = 2)[0][0]
+            token_id = self.database.commit_with_return(query, database = 2)[0]
             
-            if len(id) > 0:
+            if len(token_id) > 0:
                 query = self.gera_query.alterar_dados_da_tabela('connections', ['active'], [0], where=True, 
-                    valor_where=token_id, coluna_verificacao='id')
+                    valor_where=token_id[0], coluna_verificacao='id')
                 self.database.commit_without_return(query, database = 2)
             else:
-                query = self.gera_query.inserir_na_tabela('connections', ['token', 'active'], [token_id, 0])
+                query = self.gera_query.inserir_na_tabela('connections', ['token', 'active'], [token_id[0], 0])
                 self.database.commit_without_return(query, database = 2)
             
             self.r = {
@@ -236,7 +236,6 @@ class Backend():
             username = data['Username']
             user_type = data['UserType']
             license_plate = data['LicensePlate']
-            username = data['Username']
 
             user_id = self.database.return_user_id(username)
             columns = self.database.return_columns('carros')
@@ -419,7 +418,7 @@ class Backend():
 
             user_id = self.database.return_user_id(username)
 
-            if len(user_id) == 0:
+            if not user_id:
                 raise Exception('Usuário não encontrado no banco de dados')
 
             token = self.search_token(user_id)

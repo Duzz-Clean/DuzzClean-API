@@ -61,6 +61,8 @@ class Database():
         else:
             config_bank = 'config_bank_api'
 
+        print(config_bank)
+
         address_bank = config.get(config_bank, 'address_bank')
         name_bank = config.get(config_bank, 'name_bank')
         user_bank = config.get(config_bank, 'user_bank')

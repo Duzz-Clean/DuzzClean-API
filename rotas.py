@@ -31,7 +31,6 @@ def novo_veiculo():
             raise Exception('Invalid Token')
             
         response = backend.novo_veiculo(data)
-        
     except Exception as e:
         response = {
             'Message' : {
@@ -39,7 +38,8 @@ def novo_veiculo():
             },
             'Status' : 401
         }
-    status = int(response['status'])
+
+    status = int(response['Status'])
     return jsonify(response), 200
 
 #adicionar novo usuario - FUNCIONANDO
@@ -49,24 +49,19 @@ def novo_usuario():
         data = request.get_json()
 
         if len(data) > 5:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-            },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
 
-        response = jsonify(backend.novo_usuario(data))
-        status = int(response['status'])
+        response = backend.novo_usuario(data)
+
     except Exception as e:
-        response = jsonify({
+        response = {
             'Message' : {
                 'Error' : str(e)
             },
             'Status' : 401
-        })
-    return response, status
+        }
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 #usuario solicita nova limpeza - FUNCIONANDO
 @app.route('/nova_limpeza', methods=['POST'])
@@ -74,29 +69,24 @@ def nova_limpeza():
     try:
         data = request.get_json()
         if len(data) > 5:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.nova_limpeza(data))
-        status = int(response['status'])
+        response = backend.nova_limpeza(data)
 
     except Exception as e:
-        response = jsonify({
+        response = {
             'Message' : {
                 'Error' : str(e)
             },
             'Status' : 401
-        })
-    return response, status
+        }
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 #avalicao do cliente a respeito de UM carro(QRcode) - FUNCIONANDO
 @app.route('/nova_avaliacao', methods=['POST'])
@@ -104,29 +94,25 @@ def nova_avaliacao():
     try:
         data = request.get_json()
         if len(data) > 6:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
 
-        response = jsonify(backend.nova_avaliacao(data))
-        status = int(response['status'])
-
+        response = backend.nova_avaliacao(data)
+ 
+ 
     except Exception as e:
-        response = jsonify({
+        response = {
             'Message' : {
                 'Error' : str(e)
             },
             'Status' : 401
-        })
-    return response, status
+        }
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 
 @app.route ('/recusa_notificacao', methods=['POST'])
@@ -134,29 +120,24 @@ def recusa_notificacao():
     try:
         data = request.get_json()
         if len(data) > 6:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.recusa_notificacao(data))
-        status = int(response['status'])
+        response = backend.recusa_notificacao(data)
 
     except Exception as e:
-        response = jsonify({
+        response = {
             'Message' : {
                 'Error' : str(e)
             },
             'Status' : 401
-        })
-    return response, status
+        }
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 
 @app.route ('/grava_envio_notificao', methods=['POST'])
@@ -164,29 +145,24 @@ def grava_envio_notificao():
     try:
         data = request.get_json()
         if len(data) > 4:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.grava_envio_notificao(data))
-        status = int(response['status'])
-
+        response = backend.grava_envio_notificao(data)
+        
     except Exception as e:
-        response = jsonify({
+        response = {
             'Message' : {
                 'Error' : str(e)
             },
             'Status' : 401
-        })
-    return response, status
+        }
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 
 @app.route ('/solicitar_limpeza', methods=['POST'])
@@ -194,55 +170,45 @@ def solicitar_limpeza():
     try:
         data = request.get_json()
         if len(data) > 5:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.solicitar_limpeza(data))
-        status = int(response['status'])
-
+        response = backend.solicitar_limpeza(data)
+    
     except Exception as e:
-        response = jsonify({
+        response = {
             'Message' : {
                 'Error' : str(e)
             },
             'Status' : 401
-        })
-    return response, status
+        }
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 
 @app.route ('/autenticar_usuario', methods=['POST'])
 def autenticar_usuario():
     try:
-        data = request.json()
+        data = request.get_json()
         if len(data) > 3:
-                e = jsonify({
-                    'Message' : {
-                        'Error' : 'Request out of params'
-                    },
-                    'Status' : 401
-                })
-                raise Exception(e)
+            raise Exception('Request out of params')
 
-        response = jsonify(backend.autenticar_usuario(data))
-        status = int(response['status'])
+
+        response = backend.autenticar_usuario(data)
 
     except Exception as e:
-        response = jsonify({
+        response = {
             'Message' : {
                 'Error' : str(e)
             },
             'Status' : 401
-        })
-    return response, status
+        }
+    status = int(response['Status'])
+    return jsonify(response), 200   
 
 
 @app.route ('/buscar_notificacoes', methods=['POST'])
@@ -250,29 +216,24 @@ def buscar_notificacoes():
     try:
         data = request.get_json()
         if len(data) > 3:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.buscar_notificacoes(data))
-        status = int(response['status'])
+        response = backend.buscar_notificacoes(data)
 
     except Exception as e:
-        response = jsonify({
+        response = {
             'Message' : {
                 'Error' : str(e)
             },
             'Status' : 401
-        })
-    return response, status
+        }
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 
 @app.route ('/buscar_limpezas_veiculo', methods=['POST'])
@@ -280,29 +241,23 @@ def buscar_limpezas_veiculo():
     try:
         data = request.get_json()
         if len(data) > 4:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.buscar_limpezas_veiculo(data))
-        status = int(response['status'])
-
+        response = backend.buscar_limpezas_veiculo(data)
+        
     except Exception as e:
-        response = jsonify({
+        response = {
             'Message' : {
                 'Error' : str(e)
             },
             'Status' : 401
-        })
-    return response, status
+        }
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 
 @app.route ('/buscar_resumo_veiculo', methods=['POST'])
@@ -310,29 +265,24 @@ def buscar_resumo_veiculo():
     try:
         data = request.get_json()
         if len(data) > 4:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.buscar_resumo_veiculo(data))
-        status = int(response['status'])
+        response = backend.buscar_resumo_veiculo(data)
 
     except Exception as e:
-        response = jsonify({
+        response = {
             'Message' : {
                 'Error' : str(e)
             },
             'Status' : 401
-        })
-    return response, status
+        }
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 
 @app.route ('/buscar_ultima_limpeza_veiculo', methods=['POST'])
@@ -340,29 +290,24 @@ def buscar_ultima_limpeza_veiculo():
     try:
         data = request.get_json()
         if len(data) > 4:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.buscar_ultima_limpeza_veiculo(data))
-        status = int(response['status'])
+        response = backend.buscar_ultima_limpeza_veiculo(data)
 
     except Exception as e:
-        response = jsonify({
+        response = {
             'Message' : {
                 'Error' : str(e)
             },
             'Status' : 401
-        })
-    return response, status
+        }
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 
 @app.route ('/buscar_limpeza', methods=['POST'])
@@ -370,29 +315,24 @@ def buscar_limpeza():
     try:
         data = request.get_json()
         if len(data) > 4:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.buscar_limpeza(data))
-        status = int(response['status'])
+        response = backend.buscar_limpeza(data)
 
     except Exception as e:
-        response = jsonify({
+        response = {
             'Message' : {
                 'Error' : str(e)
             },
             'Status' : 401
-        })
-    return response, status
+        }
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 
 @app.route ('/realizar_logoff', methods=['POST'])
@@ -400,29 +340,24 @@ def realizar_logoff():
     try:
         data = request.get_json()
         if len(data) > 4:
-            e = jsonify({
-                'Message' : {
-                    'Error' : 'Request out of params'
-                },
-                'Status' : 401
-            })
-            raise Exception(e)
+            raise Exception('Request out of params')
+
 
         response = backend.confirm_token(data)
         if response['Message'] != 'OK':
             raise Exception('Invalid Token')
             
-        response = jsonify(backend.realizar_logoff(data))
-        status = int(response['status'])
+        response = backend.realizar_logoff(data)
 
     except Exception as e:
-        response = jsonify({
+        response = {
             'Message' : {
                 'Error' : str(e)
             },
             'Status' : 401
-        })
-    return response, status
+        }
+    status = int(response['Status'])
+    return jsonify(response), 200
 
 
 if __name__ == "__main__":
