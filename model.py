@@ -36,8 +36,7 @@ class Backend():
             self.database.commit_without_return(query, database = 2)
 
             self.r = {
-                'Message' : token,
-                'Status'  : 200
+                'Message' : token
             }
         except Exception as e:
 
@@ -413,10 +412,10 @@ class Backend():
     def autenticar_usuario(self, data):
         try:
             username = data['Username']
-            user_type = data['UserType']
             password = data['Password']
 
             user_id = self.database.return_user_id(username)
+            user_type = self.database.return_user_type(user_id)
 
             if not user_id:
                 raise Exception('Usuário não encontrado no banco de dados')

@@ -131,6 +131,13 @@ class Database():
 
         return user_id
 
+    
+    def return_user_type(self, user_id):
+        query = f'select type from usuarios where id={user_id}'
+        user_type = self.commit_with_return(query)[0][0]
+
+        return user_type
+
 
     def return_salt(self, username):
         query = f'select salt from usuarios where username = "{username}"'
